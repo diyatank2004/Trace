@@ -1,0 +1,100 @@
+/* stylelint-disable */
+@import "tailwindcss";
+
+:root {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+
+  --bg-page: linear-gradient(135deg,#f8fafc 0%,#eef2ff 48%,#f8fafc 100%);
+  --surface: rgba(255,255,255,0.8);
+  --card-bg: rgba(255,255,255,0.9);
+  --card-border: rgba(15,23,42,0.08);
+
+  --text-primary: #0f172a;
+  --text-muted: #64748b;
+  --text-on-primary: #ffffff;
+
+  /* FIXED: primary color */
+  --primary: #2563eb;
+}
+
+@layer base {
+  body {
+    background: var(--bg-page);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .surface-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+  }
+
+  .sidebar-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.85) transparent;
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.85);
+    border-radius: 9999px;
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.95);
+  }
+}
+
+@layer components {
+
+  /* GLASS CARD (FIXED) */
+  .glass-card {
+    background: var(--surface);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-radius: 1rem;
+  }
+
+  /* PRIMARY BUTTON (FIXED) */
+  .btn-primary {
+    background: var(--primary);
+    color: var(--text-on-primary);
+    padding: 0.6rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    font-weight: 500;
+  }
+
+  .btn-primary:hover {
+    filter: brightness(0.9);
+    transform: translateY(-1px);
+  }
+
+  /* SECONDARY BUTTON */
+  .btn-secondary {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--card-border);
+    padding: 0.6rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(148,163,184,0.1);
+  }
+}

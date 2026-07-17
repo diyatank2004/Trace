@@ -1,0 +1,41 @@
+# Python environments
+env/
+venv/
+ENV/
+.venv/
+trace-backend/env/
+
+# Python cache/test output
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Local backend secrets
+.env
+.env.*
+trace-backend/.env
+trace-backend/.env.*
+
+# Node dependencies/build output
+node_modules/
+trace-frontend/node_modules/
+dist/
+build/
+trace-frontend/dist/
+trace-frontend/build/
+
+# Logs and caches
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+.vite/
+
+# Editor/system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+

@@ -1,0 +1,19 @@
+# Dependency Directories
+node_modules/
+/dist
+/build
+
+# Local Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# System/Editor Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+.vscode/
+.DS_Store
