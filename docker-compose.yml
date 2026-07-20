@@ -1,37 +1,15 @@
 version: "3.9"
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: trace-mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: trace_db
-      MYSQL_USER: trace_user
-      MYSQL_PASSWORD: trace_password
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpassword"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   backend:
     build:
       context: ./trace-backend
       dockerfile: Dockerfile
     container_name: trace-backend
     restart: unless-stopped
-    depends_on:
-      mysql:
-        condition: service_healthy
     environment:
-      DATABASE_URL: mysql+pymysql://trace_user:trace_password@mysql:3306/trace_db
-      SECRET_KEY: replace-with-a-secure-secret
+      DATABASE_URL: postgresql://tracker:project_tracker@database-1.crakskeyahiw.ap-southeast-2.rds.amazonaws.com:5432/trace_db
+      SECRET_KEY: thisisthesecretkeyforjwtsigning
       ALGORITHM: HS256
       ACCESS_TOKEN_EXPIRE_MINUTES: 720
     ports:
@@ -42,13 +20,10 @@ services:
       context: ./trace-frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_BASE_URL: http://localhost:8000
+        VITE_API_BASE_URL: http://3.104.49.129:8000
     container_name: trace-frontend
     restart: unless-stopped
     depends_on:
       - backend
     ports:
       - "3000:80"
-
-volumes:
-  mysql_data:
