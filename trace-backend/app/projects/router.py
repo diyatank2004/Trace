@@ -617,18 +617,49 @@ def admin_transfer_project_leadership(
     return {"status": "success", "message": f"Leadership successfully transferred to Employee ID {data.new_leader_employee_id}"}
 
 
-@router.delete("/admin/delete/{project_id}", status_code=status.HTTP_200_OK)
-def admin_force_delete_project(project_id: UUID, db: Session = Depends(get_db), current_admin: Employee = Depends(get_current_user)):
+# @router.delete("/admin/delete/{project_id}", status_code=status.HTTP_200_OK)
+# def admin_force_delete_project(project_id: UUID, db: Session = Depends(get_db), current_admin: Employee = Depends(get_current_user)):
+#     if current_admin.global_role != GlobalRole.ADMIN:
+#         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access Denied. Only system administrators can execute global deletions.")
+
+#     project = db.query(Project).filter(Project.id == project_id).first()
+#     if not project:
+#         raise HTTPException(status_code=404, detail="Target project record space not found in system storage.")
+
+#     db.delete(project)
+#     db.commit()
+#     return {"status": "success", "message": f"Administrative Action Complete: Project '{project.name}' successfully deleted."}
+
+@router.delete(
+    "/admin/projects/{project_id}",
+    status_code=status.HTTP_200_OK
+)
+def admin_force_delete_project(
+    project_id: UUID,
+    db: Session = Depends(get_db),
+    current_admin: Employee = Depends(get_current_user),
+):
     if current_admin.global_role != GlobalRole.ADMIN:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access Denied. Only system administrators can execute global deletions.")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access Denied. Only system administrators can execute global deletions."
+        )
 
     project = db.query(Project).filter(Project.id == project_id).first()
     if not project:
-        raise HTTPException(status_code=404, detail="Target project record space not found in system storage.")
+        raise HTTPException(
+            status_code=404,
+            detail="Target project record not found."
+        )
 
     db.delete(project)
     db.commit()
-    return {"status": "success", "message": f"Administrative Action Complete: Project '{project.name}' successfully deleted."}
+
+    return {
+        "status": "success",
+        "message": f"Project '{project.name}' deleted successfully."
+    }
+
 
 
 # --- 5. SYSTEM CONTROL OVERRIDES (DELETIONS & TRANSFERS) ---

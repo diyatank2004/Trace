@@ -174,7 +174,7 @@ export default function AdminDashboard({ fullName, onLogout }: Props) {
 
     try {
       const token = localStorage.getItem('trace_session_token');
-      const res = await fetch(apiUrl(`/projects/admin/delete/${projectId}`), {
+      const res = await fetch(apiUrl(`/projects/admin/projects/${projectId}`), {
         method: 'DELETE',
         headers: { ...(token && { 'Authorization': `Bearer ${token}` }) }
       });
