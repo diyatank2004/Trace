@@ -46,10 +46,9 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",      # Your React development port
+        "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "http://localhost:5173",      # Vite fallback port if you switch back
-        "http://127.0.0.1:5173",
+        "http://3.104.49.129:3000",
     ],
     allow_credentials=True,
     allow_methods=["*"],              # explicit allow for GET, POST, OPTIONS, PATCH, DELETE

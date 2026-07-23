@@ -507,7 +507,7 @@ export default function AuthPage({ role, onBack, onAuthSuccess }: AuthPageProps)
                   <input value={employeeRegisterData.skills} onChange={(e) => setEmployeeRegisterData({ ...employeeRegisterData, skills: e.target.value })} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-zinc-400 transition text-slate-900" placeholder="Python, FastAPI, React (Split with commas)" />
                 </div>
 
-                <button type="submit" onClick={() => {console.log("Registerbtn-APIcall chk",employeeRegisterData)}} disabled={isLoading} className="w-full bg-slate-900 text-white py-2.5 rounded-xl font-semibold hover:opacity-90 transition mt-3 text-sm shadow">
+                <button type="submit" disabled={isLoading} className="w-full bg-slate-900 text-white py-2.5 rounded-xl font-semibold hover:opacity-90 transition mt-3 text-sm shadow">
                   {isLoading ? 'Onboarding...' : 'Onboard Profile Directory'}
                 </button>
               </form>
