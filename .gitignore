@@ -39,3 +39,7 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
+backups/
+*.dump
+*.backup
+

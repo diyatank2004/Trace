@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ChevronDown, Loader2, Plus, Trash2 } from 'lucide-react';
+import { apiUrl } from '../lib/api';
 
 type Priority = 'Low' | 'Medium' | 'High' | 'Urgent';
 
@@ -100,7 +101,7 @@ export default function BacklogPage({ projectId, projectName, projectKey }: Back
 
     setMembersLoading(true);
     try {
-      const response = await fetch(`http://localhost:8000/projects/${projectId}/members`, {
+      const response = await fetch(apiUrl(`/projects/${projectId}/members`), {
         signal,
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -146,13 +147,13 @@ export default function BacklogPage({ projectId, projectName, projectKey }: Back
 
     try {
       const [tasksResponse, sprintsResponse] = await Promise.all([
-        fetch(`http://localhost:8000/projects/${projectId}/tasks`, {
+        fetch(apiUrl(`/projects/${projectId}/tasks`), {
           signal,
           headers: {
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
         }),
-        fetch(`http://localhost:8000/projects/${projectId}/sprints`, {
+        fetch(apiUrl(`/projects/${projectId}/sprints`), {
           signal,
           headers: {
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -292,7 +293,7 @@ export default function BacklogPage({ projectId, projectName, projectKey }: Back
     setErrorMessage(null);
 
     try {
-      const response = await fetch('http://localhost:8000/projects/tasks/create', {
+      const response = await fetch(apiUrl('/projects/tasks/create'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -339,7 +340,7 @@ export default function BacklogPage({ projectId, projectName, projectKey }: Back
     setStatusMessage(null);
 
     try {
-      const response = await fetch(`http://localhost:8000/projects/tasks/${taskId}`, {
+      const response = await fetch(apiUrl(`/projects/tasks/${taskId}`), {
         method: 'DELETE',
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),

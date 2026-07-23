@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { apiUrl } from '../lib/api';
 
 interface EmployeeProjectSummary {
   project_id: string;
@@ -30,7 +31,7 @@ export default function ProfilePage({
       setError(null);
 
       try {
-        const res = await fetch(`http://localhost:8000/employees/${encodeURIComponent(workspace.employeeId)}`, {
+        const res = await fetch(apiUrl(`/employees/${encodeURIComponent(workspace.employeeId)}`), {
           headers: {
             'Content-Type': 'application/json',
             ...(token ? { Authorization: `Bearer ${token}` } : {}),

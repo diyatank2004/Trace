@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FolderKanban, LogOut, Users, CheckCircle2, Activity, Loader2, ShieldAlert, Trash2, UserCheck, Shield, ChevronRight, Briefcase, Mail, Calendar, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { apiUrl } from '../lib/api';
 
 type Props = {
   fullName: string;
@@ -59,7 +60,7 @@ export default function AdminDashboard({ fullName, onLogout }: Props) {
   const loadDashboardData = async () => {
     try {
       const token = localStorage.getItem('trace_session_token');
-      const res = await fetch('http://localhost:8000/projects/admin/overview-stats', {
+      const res = await fetch(apiUrl('/projects/admin/overview-stats'), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +103,7 @@ export default function AdminDashboard({ fullName, onLogout }: Props) {
     setProjectMembers([]);
     try {
       const token = localStorage.getItem('trace_session_token');
-      const res = await fetch(`http://localhost:8000/projects/admin/${project.id}/members-list`, {
+      const res = await fetch(apiUrl(`/projects/admin/${project.id}/members-list`), {
         method: 'GET',
         headers: { ...(token && { 'Authorization': `Bearer ${token}` }) }
       });
@@ -127,7 +128,7 @@ export default function AdminDashboard({ fullName, onLogout }: Props) {
     try {
       const token = localStorage.getItem('trace_session_token');
       // Hitting the new dedicated separate endpoint we made on the backend
-      const res = await fetch(`http://localhost:8000/projects/admin/employee/${employee.employee_id}/details`, {
+      const res = await fetch(apiUrl(`/projects/admin/employee/${employee.employee_id}/details`), {
         method: 'GET',
         headers: { ...(token && { 'Authorization': `Bearer ${token}` }) }
       });
@@ -152,7 +153,7 @@ export default function AdminDashboard({ fullName, onLogout }: Props) {
 
     try {
       const token = localStorage.getItem('trace_session_token');
-      const res = await fetch(`http://localhost:8000/auth/admin/delete-user/${employeeId}`, {
+      const res = await fetch(apiUrl(`/auth/admin/delete-user/${employeeId}`), {
         method: 'DELETE',
         headers: { ...(token && { 'Authorization': `Bearer ${token}` }) }
       });
@@ -173,7 +174,7 @@ export default function AdminDashboard({ fullName, onLogout }: Props) {
 
     try {
       const token = localStorage.getItem('trace_session_token');
-      const res = await fetch(`http://localhost:8000/projects/admin/delete/${projectId}`, {
+      const res = await fetch(apiUrl(`/projects/admin/delete/${projectId}`), {
         method: 'DELETE',
         headers: { ...(token && { 'Authorization': `Bearer ${token}` }) }
       });
@@ -197,7 +198,7 @@ export default function AdminDashboard({ fullName, onLogout }: Props) {
 
     try {
       const token = localStorage.getItem('trace_session_token');
-      const res = await fetch('http://localhost:8000/projects/admin/change-lead', {
+      const res = await fetch(apiUrl('/projects/admin/change-lead'), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

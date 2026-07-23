@@ -1,6 +1,5 @@
 import type { KanbanBoardData, KanbanColumn, KanbanPriority, KanbanTask } from '../types';
-
-const API_BASE = 'http://localhost:8000/projects';
+import { apiUrl } from './api';
 
 type BackendTask = {
   id?: string;
@@ -122,7 +121,7 @@ const normalizeBoard = (board: BackendBoard): KanbanBoardData => ({
 });
 
 export const fetchKanbanBoard = async (projectId: string, signal?: AbortSignal): Promise<KanbanBoardData> => {
-  const response = await fetch(`${API_BASE}/${projectId}/board`, { signal });
+  const response = await fetch(apiUrl(`/projects/${projectId}/board`), { signal });
   const board = await parseJson<BackendBoard>(response);
   return normalizeBoard(board);
 };
@@ -131,7 +130,7 @@ export const createKanbanTask = async (
   payload: CreateKanbanTaskPayload,
   signal?: AbortSignal
 ): Promise<KanbanTask> => {
-  const response = await fetch(`${API_BASE}/tasks/create`, {
+  const response = await fetch(apiUrl('/projects/tasks/create'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -148,7 +147,7 @@ export const moveKanbanTask = async (
   columnId: string,
   signal?: AbortSignal
 ): Promise<KanbanTask> => {
-  const response = await fetch(`${API_BASE}/tasks/${taskId}/move-lane/${columnId}`, {
+  const response = await fetch(apiUrl(`/projects/tasks/${taskId}/move-lane/${columnId}`), {
     method: 'PATCH',
     signal,
   });

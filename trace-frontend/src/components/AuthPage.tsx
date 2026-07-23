@@ -15,6 +15,7 @@ import {
   FileSpreadsheet,
   Layers
 } from 'lucide-react';
+import { apiUrl } from '../lib/api';
 
 type Role = 'admin' | 'user';
 
@@ -66,7 +67,7 @@ export default function AuthPage({ role, onBack, onAuthSuccess }: AuthPageProps)
       const formattedKey = gatewayData.projectKey.trim().toUpperCase();
       const cleanEmployeeId = gatewayData.employeeId.trim();
 
-      const res = await fetch('http://localhost:8000/projects/verify-access', {
+      const res = await fetch(apiUrl('/projects/verify-access'), {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json' 
@@ -112,7 +113,7 @@ export default function AuthPage({ role, onBack, onAuthSuccess }: AuthPageProps)
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://localhost:8000/auth/user/register', {
+      const res = await fetch(apiUrl('/auth/user/register'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -144,7 +145,7 @@ export default function AuthPage({ role, onBack, onAuthSuccess }: AuthPageProps)
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://localhost:8000/auth/admin/login', {
+      const res = await fetch(apiUrl('/auth/admin/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -178,7 +179,7 @@ export default function AuthPage({ role, onBack, onAuthSuccess }: AuthPageProps)
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://localhost:8000/auth/admin/signup', {
+      const res = await fetch(apiUrl('/auth/admin/signup'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -216,7 +217,7 @@ export default function AuthPage({ role, onBack, onAuthSuccess }: AuthPageProps)
         .replace(/[^a-z0-9]+/g, '-')   
         .replace(/(^-|-$)/g, '');      
 
-      const res = await fetch('http://localhost:8000/projects/create', {
+      const res = await fetch(apiUrl('/projects/create'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -314,7 +315,8 @@ export default function AuthPage({ role, onBack, onAuthSuccess }: AuthPageProps)
               Gateway
             </button>
             <button
-              onClick={() => { setUserMode('register'); setErrorMsg(null); setSuccessMsg(null); setGeneratedKey(null); }}
+              onClick={() => { setUserMode('register'); setErrorMsg(null); setSuccessMsg(null); setGeneratedKey(null);
+              }}
               className={`py-2 rounded-xl transition flex items-center justify-center gap-1.5 ${userMode === 'register' ? 'bg-white shadow-sm text-slate-900 border border-slate-200/40' : 'text-slate-500 hover:text-slate-800'}`}
             >
               <Users className="w-3.5 h-3.5 text-zinc-400" /> 
@@ -505,7 +507,7 @@ export default function AuthPage({ role, onBack, onAuthSuccess }: AuthPageProps)
                   <input value={employeeRegisterData.skills} onChange={(e) => setEmployeeRegisterData({ ...employeeRegisterData, skills: e.target.value })} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-zinc-400 transition text-slate-900" placeholder="Python, FastAPI, React (Split with commas)" />
                 </div>
 
-                <button type="submit" disabled={isLoading} className="w-full bg-slate-900 text-white py-2.5 rounded-xl font-semibold hover:opacity-90 transition mt-3 text-sm shadow">
+                <button type="submit" onClick={() => {console.log("Registerbtn-APIcall chk",employeeRegisterData)}} disabled={isLoading} className="w-full bg-slate-900 text-white py-2.5 rounded-xl font-semibold hover:opacity-90 transition mt-3 text-sm shadow">
                   {isLoading ? 'Onboarding...' : 'Onboard Profile Directory'}
                 </button>
               </form>

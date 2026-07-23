@@ -21,6 +21,7 @@ import {
   FolderPlus,
 } from 'lucide-react';
 import ProfilePage from './ProfilePage';
+import { apiUrl } from '../lib/api';
 import {
   buildWorkspacePath,
   getDefaultProjectSlug,
@@ -127,8 +128,6 @@ const buildProjectSlug = (projectName: string) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
-
-const API_BASE = 'http://localhost:8000/projects';
 
 const getTaskField = (task: any, alias: string, plain: string, fallback = '') =>
   task?.[alias] ?? task?.[plain] ?? fallback;
@@ -557,7 +556,7 @@ const Dashboard: React.FC<DashboardProps> = ({ workspace, token, onLogout }) => 
     setIsAddingMember(true);
 
     try {
-      const res = await fetch('http://localhost:8000/projects/add-member', {
+      const res = await fetch(apiUrl('/projects/add-member'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -599,7 +598,7 @@ const Dashboard: React.FC<DashboardProps> = ({ workspace, token, onLogout }) => 
 
     try {
       const slug = buildProjectSlug(projectForm.projectName);
-      const res = await fetch('http://localhost:8000/projects/create', {
+      const res = await fetch(apiUrl('/projects/create'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -647,7 +646,7 @@ const Dashboard: React.FC<DashboardProps> = ({ workspace, token, onLogout }) => 
 
       try {
         const res = await fetch(
-          `http://localhost:8000/projects/dashboard/${encodeURIComponent(workspace.employeeId)}`,
+          apiUrl(`/projects/dashboard/${encodeURIComponent(workspace.employeeId)}`),
           {
             method: 'GET',
             headers: {
@@ -695,13 +694,13 @@ const Dashboard: React.FC<DashboardProps> = ({ workspace, token, onLogout }) => 
     const loadSnapshots = async () => {
       setSnapshotLoading(true);
 
-      const entries = await Promise.all(
-        employeeProjects.map(async (project) => {
+      const entries: Array<[string, ProjectRealtimeSnapshot] | null> = await Promise.all(
+        employeeProjects.map(async (project): Promise<[string, ProjectRealtimeSnapshot] | null> => {
           try {
             const [boardRes, membersRes, sprintsRes] = await Promise.all([
-              fetch(`${API_BASE}/${project.project_id}/board`, { signal: controller.signal }),
-              fetch(`${API_BASE}/${project.project_id}/members`, { signal: controller.signal }),
-              fetch(`${API_BASE}/${project.project_id}/sprints`, { signal: controller.signal }),
+              fetch(apiUrl(`/projects/${project.project_id}/board`), { signal: controller.signal }),
+              fetch(apiUrl(`/projects/${project.project_id}/members`), { signal: controller.signal }),
+              fetch(apiUrl(`/projects/${project.project_id}/sprints`), { signal: controller.signal }),
             ]);
 
             if (!boardRes.ok || !membersRes.ok || !sprintsRes.ok) {
@@ -714,7 +713,7 @@ const Dashboard: React.FC<DashboardProps> = ({ workspace, token, onLogout }) => 
               sprintsRes.json(),
             ]);
 
-            return [project.project_id, normalizeProjectSnapshot(project.project_id, board, members, sprints)] as const;
+            return [project.project_id, normalizeProjectSnapshot(project.project_id, board, members, sprints)];
           } catch (error: any) {
             if (controller.signal.aborted) return null;
 
@@ -729,7 +728,7 @@ const Dashboard: React.FC<DashboardProps> = ({ workspace, token, onLogout }) => 
                 loadedAt: new Date().toISOString(),
                 error: error?.message || 'Unable to load live project data.',
               },
-            ] as const;
+            ];
           }
         })
       );
@@ -1374,7 +1373,7 @@ const Dashboard: React.FC<DashboardProps> = ({ workspace, token, onLogout }) => 
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 8 }}
-                    className="absolute left-0 right-0 top-14 z-50 max-h-[28rem] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-xl"
+                    className="absolute left-0 right-0 top-14 z-50 max-h-112 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-xl"
                   >
                     {searchResults.length > 0 ? (
                       <div className="space-y-1">

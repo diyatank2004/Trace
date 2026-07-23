@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8000/projects';
+import { apiUrl } from './api';
 
 export type BackendSprintStatus = 'Future' | 'Active' | 'Completed';
 
@@ -144,13 +144,13 @@ export const sprintDaysRemaining = (value: string | null | undefined): number | 
 };
 
 export const fetchProjectSprints = async (projectId: string, signal?: AbortSignal): Promise<SprintRecord[]> => {
-  const response = await fetch(`${API_BASE}/${projectId}/sprints`, { signal });
+  const response = await fetch(apiUrl(`/projects/${projectId}/sprints`), { signal });
   const payload = await parseJson<BackendSprintRecord[]>(response);
   return payload.map(normalizeSprint).filter((sprint) => sprint.id.length > 0);
 };
 
 export const fetchProjectTasks = async (projectId: string, signal?: AbortSignal): Promise<BackendTaskRecord[]> => {
-  const response = await fetch(`${API_BASE}/${projectId}/tasks`, { signal });
+  const response = await fetch(apiUrl(`/projects/${projectId}/tasks`), { signal });
   return parseJson<BackendTaskRecord[]>(response);
 };
 
@@ -158,7 +158,7 @@ export const createSprint = async (
   payload: SprintCreatePayload,
   signal?: AbortSignal
 ): Promise<SprintRecord> => {
-  const response = await fetch(`${API_BASE}/sprints/create`, {
+  const response = await fetch(apiUrl('/projects/sprints/create'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ export const updateSprint = async (
   payload: SprintUpdatePayload,
   signal?: AbortSignal
 ): Promise<SprintRecord> => {
-  const response = await fetch(`${API_BASE}/sprints/${sprintId}/update`, {
+  const response = await fetch(apiUrl(`/projects/sprints/${sprintId}/update`), {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
