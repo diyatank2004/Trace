@@ -633,18 +633,18 @@ def admin_force_delete_project(project_id: UUID, db: Session = Depends(get_db), 
 
 # --- 5. SYSTEM CONTROL OVERRIDES (DELETIONS & TRANSFERS) ---
 
-@router.delete("/{project_id}/delete/{employee_id}", status_code=status.HTTP_200_OK)
-def delete_project_as_team_leader(project_id: UUID, employee_id: str, db: Session = Depends(get_db)):
-    user = db.query(Employee).filter(Employee.employee_id == employee_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="Employee record profile metrics not found.")
-    membership = db.query(ProjectMember).filter(ProjectMember.project_id == project_id, ProjectMember.user_id == user.id).first()
-    if not membership or membership.role != ProjectRole.TEAM_LEADER:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access Denied. Only the designated Team Leader can delete this project container.")
-    project = db.query(Project).filter(Project.id == project_id).first()
-    if not project:
-        raise HTTPException(status_code=404, detail="Target project space data not found.")
-    db.delete(project)
-    db.commit()
-    return {"status": "success", "message": f"Project '{project.name}' successfully deleted."}
+# @router.delete("/{project_id}/delete/{employee_id}", status_code=status.HTTP_200_OK)
+# def delete_project_as_team_leader(project_id: UUID, employee_id: str, db: Session = Depends(get_db)):
+#     user = db.query(Employee).filter(Employee.employee_id == employee_id).first()
+#     if not user:
+#         raise HTTPException(status_code=404, detail="Employee record profile metrics not found.")
+#     membership = db.query(ProjectMember).filter(ProjectMember.project_id == project_id, ProjectMember.user_id == user.id).first()
+#     if not membership or membership.role != ProjectRole.TEAM_LEADER:
+#         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access Denied. Only the designated Team Leader can delete this project container.")
+#     project = db.query(Project).filter(Project.id == project_id).first()
+#     if not project:
+#         raise HTTPException(status_code=404, detail="Target project space data not found.")
+#     db.delete(project)
+#     db.commit()
+#     return {"status": "success", "message": f"Project '{project.name}' successfully deleted."}
 
