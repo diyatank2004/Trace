@@ -113,9 +113,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy using SSH
+      - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
-
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
@@ -126,10 +125,26 @@ jobs:
 
             cd ${{ secrets.DEPLOY_PROJECT_DIR }}
 
+            echo "===== Updating Repository ====="
+            git fetch origin
+            git reset --hard origin/main
+
+            echo "===== Login to GHCR ====="
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+            echo "===== Pull Latest Images ====="
             docker compose pull
 
-            docker compose up -d --remove-orphans
+            echo "===== Stop Old Containers ====="
+            docker compose down
 
+            echo "===== Start New Containers ====="
+            docker compose up -d --force-recreate --remove-orphans
+
+            echo "===== Remove Old Images ====="
             docker image prune -af
+
+            echo "===== Running Containers ====="
+            docker ps
+
+            echo "===== Deployment Successful ====="
